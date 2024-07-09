@@ -69,6 +69,12 @@ docker exec <PIWIGO_CONTAINER_ID> /usr/bin/mysqldump -u root -p<MYSQL_ROOT_PASSW
 - Create a shell script containing the properly formatted command for your environment, and use a `root` cronjob to schedule these backups.
 - The resulting `piwigo_dump.sql` file should be stored on a routinely backed up remote filesystem.
 
+## MySQL Restores
+```
+cat piwigo_dump.sql | docker exec -i <PIWIGO-MYSQL_CONTAINER_ID> /usr/bin/mysql -u root --password=MYSQL_ROOT_PASSWORD> piwigo
+```
+
+
 ## Production Deployment using Portainer
 I use [Portainer](https://www.portainer.io/) to manage and orchestrate my Docker resources in my Production environments. To deploy this into your Portainer environment:
 
