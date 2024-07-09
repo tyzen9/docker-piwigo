@@ -38,7 +38,7 @@ services:
     restart: unless-stopped
   
 volumes:
-  mysql:
+  piwigo-mysql:
     name: piwigo-mysql
   piwigo-config:
     name: piwigo-config
