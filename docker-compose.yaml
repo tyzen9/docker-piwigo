@@ -1,0 +1,45 @@
+services:
+
+  # This compose file relies on a properly configured ".env" file
+  # Make a copy of .env.sample to configure your environment
+
+  mysql:
+    image: mysql:${MYSQL_VERSION_TAG}
+    container_name: piwigo-mysql
+    restart: always
+    volumes:
+      - piwigo-mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    # -------------------------------------------------------------------------------
+    # Uncomment this section to expose mysql to connections outside of the container
+    # such as MySQL Workbench
+    # -------------------------------------------------------------------------------
+    # ports:
+    #   - ${MYSQL_EXTERNAL_PORT}:3306
+
+  piwigo:
+    image: lscr.io/linuxserver/piwigo:${PIWIGO_VERSION_TAG}
+    container_name: piwigo-app
+    environment:
+      - PUID=${PIWIGO_PUID}
+      - PGID=${PIWIGO_GUID}
+      - TZ=${TZ_ID}
+    volumes:
+      - piwigo-config:/config
+      - ${PIWIGO_GALLERIES_VOLUME}:/gallery
+    ports:
+      - ${PIWIGO_EXTERNAL_PORT}:80
+    depends_on:
+      - mysql
+    restart: unless-stopped
+  
+volumes:
+  mysql:
+    name: piwigo-mysql
+  piwigo-config:
+    name: piwigo-config
+
