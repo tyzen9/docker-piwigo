@@ -19,7 +19,7 @@ The `.env` file contains comments explaining what each configuration value does.
 1. Rename the `.env.sample` file to `.env`
 2. Edit the `.env` file and populate the parameters according to your environment.
 
-> :point_right:
+> [!TIP]
 > The `.env` file is where you can declare what versions of Piwigo and MySQL you desire.
 
 If you desire the ability to connect to the MySQL instance from another machine (for example with MySQL Workbench), then uncomment the following lines in the `docker-compose.yml` file by removing the `#` characters:
@@ -60,8 +60,12 @@ These are the settings that are used to configure the Piwigo administration cons
 Finally, click `Start Installation` and you Piwigo is set and ready to be used.  The first thing you will likely want to do is login to the Administration Panel and [import your galleries](https://piwigo.org/doc/doku.php?id=user_documentation:learn:add_picture). 
 
 ## Config Volume Backups
-
 This bash script can be scheduled to run once a day to backup the Piwigo configuration volume
+
+> [!WARNING]  
+> Backing up the SQL volume is also possible, but results are mixed on restoring SQL using only the volume restore. See below for details on backup/restore of mysql.
+
+
 ```bash
 # servarr-blackpearl_sonarr-config
 docker run --rm \
@@ -118,10 +122,12 @@ Any common issues I come across will be documented here
 
 #### 1. Table marked as "crashed"
 
-Occassionally we have seen tables marked as "crashed" in MySQL. This often happens when the database runs out of disk space, of if the server was not cleanly shutdown. 
+Occasionally we have seen tables marked as "crashed" in MySQL. This often happens when the database runs out of disk space, of if the server was not cleanly shutdown. 
 
-Here is ane example of this error message that appers in the browser
-![mysqlcrashedtable.png](/piwigo/mysqlcrashedtable.png  =70%x)
+Here is ane example of this error message that appears in the browser
+<p align="center" width="100%">
+    <img src="./docs/images/mysqlcrashedtable.png" width=50% height=50%>
+</p>
 
 To repair this, we must connect to the SQL server. Doing this in a docker container can be tricky.
 
