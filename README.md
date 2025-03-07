@@ -59,10 +59,36 @@ These are the settings that are used to configure the Piwigo administration cons
 
 Finally, click `Start Installation` and you Piwigo is set and ready to be used.  The first thing you will likely want to do is login to the Administration Panel and [import your galleries](https://piwigo.org/doc/doku.php?id=user_documentation:learn:add_picture). 
 
+## Config Volume Backups
+
+This bash script can be scheduled to run once a day to backup the Piwigo configuration volume
+```bash
+# servarr-blackpearl_sonarr-config
+docker run --rm \
+-v <path_to_backup_dir>:/backup \
+-v tautulli-config:/volume:ro \
+--name volume-backup2 \
+busybox \
+tar -czf /backup/tautulli-config.tar.gz -C /volume .
+```
+
+## Config Volume Restore
+
+Should you need to restore a volume, this command will be handy
+```bash
+# servarr-blackpearl_sonarr-config
+docker run --rm \
+-v tautulli-config:/volume \
+-v <path_to_backup_dir>:/backup \
+busybox \
+tar -xzf /backup/tautulli-config.tar.gz -C /volume
+
+```
+
 ## MySQL Backups
 A shell script can be created to execute a MySQL database backup:
 
-```
+```bash
 docker exec <PIWIGO_CONTAINER_ID> /usr/bin/mysqldump -u root -p<MYSQL_ROOT_PASSWORD> <MYSQL_DATABASE> > piwigo_dump.sql 2>/dev/null
 ```
 
@@ -70,7 +96,7 @@ docker exec <PIWIGO_CONTAINER_ID> /usr/bin/mysqldump -u root -p<MYSQL_ROOT_PASSW
 - The resulting `piwigo_dump.sql` file should be stored on a routinely backed up remote filesystem.
 
 ## MySQL Restores
-```
+```bash
 cat piwigo_dump.sql | docker exec -i <PIWIGO-MYSQL_CONTAINER_ID> /usr/bin/mysql -u root --password=MYSQL_ROOT_PASSWORD> piwigo
 ```
 
@@ -86,3 +112,30 @@ I use [Portainer](https://www.portainer.io/) to manage and orchestrate my Docker
 6. Click `Deploy the stack`
 
 Once successfully deployed, you will be able to access the site at: `http://host_name:<PIWIGO_EXTERNAL_PORT>`.
+
+## Troubleshooting
+Any common issues I come across will be documented here
+
+#### 1. Table marked as "crashed"
+
+Occassionally we have seen tables marked as "crashed" in MySQL. This often happens when the database runs out of disk space, of if the server was not cleanly shutdown. 
+
+Here is ane example of this error message that appers in the browser
+![mysqlcrashedtable.png](/piwigo/mysqlcrashedtable.png  =70%x)
+
+To repair this, we must connect to the SQL server. Doing this in a docker container can be tricky.
+
+1. Log into Portainer
+1. Choose the Piwigo Stack
+1. Choose the `piwigo-mysql` container
+1. Click on `>_ Console` in the Container status sections
+1. Click `connect`
+1. run the following command 
+```
+mysql piwigo -u root -p
+```
+7. Enter the mysql root password, found in the docker container environment settings
+1. In the mysql prompt, run this command where <table_name> is the name of the corrupt table.  In this case using the screen shot above we see that the name of the table in question here is `piwigo_sessions`.
+```
+REPAIR TABLE `<table_name>`;
+```
