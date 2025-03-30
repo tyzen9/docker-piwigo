@@ -1,5 +1,9 @@
-# <img src="https://github.com/tyzen9/tyzen9/blob/main/images/logos/t9_logo.png" height="25"> - Tyzen9's Piwigo and MySQL Docker Stack
-Docker Stack that provides both Piwigo and MySQL containers.
+<p align="center">
+<img src="doc/piwigo_logo.png" height="105" style="padding-left: 25px">  
+</p> 
+
+# <img src="https://github.com/tyzen9/tyzen9/blob/main/images/logos/t9_logo.png" height="25"> Tyzen9 - Piwigo and MySQL Docker Stack
+Docker Stack that provides a [Piwigo](https://piwigo.org/) photo library backed by a MySQL container.
 
 > [!NOTE]
 >This documentation assumes you have a working knowledge of [Docker](https://www.docker.com/), [MySQL](https://www.mysql.com/), and [Piwigo](https://piwigo.org/).
