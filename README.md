@@ -52,10 +52,10 @@ These are the settings that are used to configure the Piwigo administration cons
 
 Finally, click `Start Installation` and you Piwigo is set and ready to be used.  The first thing you will likely want to do is login to the Administration Panel and [import your galleries](https://piwigo.org/doc/doku.php?id=user_documentation:learn:add_picture). 
 
-## Troubleshooting
+# Troubleshooting
 Any common issues I come across will be documented here
 
-### 1. Table marked as "crashed"
+## 1. Table marked as "crashed"
 Occasionally we have seen tables marked as "crashed" in MySQL. This often happens when the database runs out of disk space, of if the server was not cleanly shutdown. 
 
 Here is ane example of this error message that appears in the browser
