@@ -1,5 +1,5 @@
 <p align="center">
-<img src="doc/piwigo_logo.png" height="105" style="padding-left: 25px">  
+<img src="docs/piwigo_logo.png" height="105" style="padding-left: 25px">  
 </p> 
 
 # <img src="https://github.com/tyzen9/tyzen9/blob/main/images/logos/t9_logo.png" height="25"> Tyzen9 - Piwigo and MySQL Docker Stack
