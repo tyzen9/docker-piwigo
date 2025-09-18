@@ -12,7 +12,6 @@ In production it's generally best to use [Docker Engine](https://docs.docker.com
 
 ## Configuration
 This `docker-compose` implementation is configured using the `environment` section of the `compose.yaml` file.  
-The full list of config options are documented on:
 
 # What's Inside?
 This Docker stack contains everything you need to host a [Piwigo](https://piwigo.org/) photo gallery. Here is what this project has to offer:
@@ -39,7 +38,7 @@ docker compose up
     #  - ${MYSQL_EXTERNAL_PORT}:3306
 ```
 
-If everything works as expected, you should be able to access Glances at http://hostname:8089.
+If everything works as expected, you should be able to access Piwigo at http://hostname:8089.
 
 > [!NOTE]
 >This documentation assumes you have a working knowledge of [Docker](https://www.docker.com/), [MySQL](https://www.mysql.com/), and [Piwigo](https://piwigo.org/).
