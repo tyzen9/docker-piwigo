@@ -49,7 +49,7 @@ If everything works as expected, you should be able to access Glances at http://
 When running the service for the first time, access Piwigo at `http://hostname:8089`, you will be prompted to install Piwigo. You will need information from the `.env` file to complete this.
 
 <p align="center" width="100%">
-    <img src="./docs/images/piwigoInstall.png" width=50% height=50%>
+    <img src="./docs/screenshots/piwigoInstall.png" width=50% height=50%>
 </p>
 
 ### Database Configuration
@@ -73,7 +73,7 @@ Occasionally we have seen tables marked as "crashed" in MySQL. This often happen
 
 Here is ane example of this error message that appears in the browser
 <p align="center" width="100%">
-    <img src="./docs/images/mysqlcrashedtable.png" width=50% height=50%>
+    <img src="./docs/screenshots/mysqlcrashedtable.png" width=50% height=50%>
 </p>
 
 To repair this, we must connect the shell of the MySQL container. We can do this with the following command:
