@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     labels:
       # What's up docker labels (https://getwud.github.io/wud/#/)
-      - 'wud.tag.include=^\d+\.\d+\.\d+$$'
+      - 'wud.tag.include=^\d+\.\d+\.\d+$'
       - 'wud.link.template=https://piwigo.org/changelogs'
 
   # *****************************************************************************
@@ -71,7 +71,7 @@ services:
       # Show all version 8 updates
       - 'wud.tag.include=^8(\.\d+)*$'
       # Show all version updates
-      # - 'wud.tag.include=^\d+\.\d+$$'
+      # - 'wud.tag.include=^\d+\.\d+$'
       - 'wud.link.template=https://dev.mysql.com/doc/relnotes/mysql/8.0/en/'
 
 volumes:
