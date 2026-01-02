@@ -1,5 +1,3 @@
-name: piwigo
-
 services:
 
   # *****************************************************************************
@@ -21,7 +19,7 @@ services:
     container_name: piwigo
     environment:
       - PUID=${PIWIGO_PUID:-1000}
-      - PGID=${PIWIGO_GUID:-1000}
+      - PGID=${PIWIGO_PGID:-1000}
       - TZ=${TZ_ID}
     volumes:
       - config:/config
@@ -32,9 +30,11 @@ services:
       - mysql
     restart: unless-stopped
     labels:
-      # What's up docker labels (https://getwud.github.io/wud/#/)
+      # WUD - What's up docker labels (https://getwud.github.io/wud/#/) -------------
       - 'wud.tag.include=^\d+\.\d+\.\d+$$'
       - 'wud.link.template=https://piwigo.org/changelogs'
+      # Offen Backup Labels ---------------------------------------------------------
+      - "docker-volume-backup.stop-during-backup=${BACKUP_LABEL}"
 
   # *****************************************************************************
   # mysql
@@ -67,14 +67,56 @@ services:
     # ports:
     #   - ${MYSQL_EXTERNAL_PORT:-3306}:3306
     labels:
-      # What's up docker labels (https://getwud.github.io/wud/#/)
-      # Show all version 8 updates
-      - 'wud.tag.include=^8(\.\d+)*$$'
-      # Show all version updates
-      # - 'wud.tag.include=^\d+\.\d+$'
+      # WUD - What's up docker labels (https://getwud.github.io/wud/#/) -------------
+      - 'wud.tag.include=^8(\.\d+)*$$' # Show all version 8 updates
+      # - 'wud.tag.include=^\d+\.\d+$' # Show all version updates
       - 'wud.link.template=https://dev.mysql.com/doc/relnotes/mysql/8.0/en/'
+      # Offen Backup Labels ---------------------------------------------------------
+      - "docker-volume-backup.stop-during-backup=${BACKUP_LABEL}"
+
+  # *********************************************************************************
+  # volume-backup
+  #   Automated daily backup of Docker named volumes using offen/docker-volume-backup.
+  #   This lightweight service runs in the background, creates a single compressed 
+  #   archive containing all specified volumes, and automatically prunes old backups 
+  #   based on the configured retention period. It ensures data consistency by 
+  #   temporarily stopping labeled containers during the backup process. Backups 
+  #   are stored locally on the host; a separate secure process (e.g., rsync/cron) 
+  #   can be used for off-site transfer.
+  #
+  # *********************************************************************************
+  volume-backup:
+    image: offen/docker-volume-backup:${TAG_OFFEN:-latest}
+    container_name: ${BACKUP_LABEL}-backup
+    restart: unless-stopped
+    depends_on:
+      - mysql
+      - config
+    environment:
+      - TZ=${TZ_ID:-America/New_York}
+      - BACKUP_CRON_EXPRESSION=${BACKUP_CRON_EXPRESSION:-0 2 * * *}
+      - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-14}
+      - BACKUP_FILENAME=${BACKUP_LABEL}-%Y-%m-%dT%H-%M-%S.tar.gz
+      - BACKUP_STOP_DURING_BACKUP_LABEL=${BACKUP_LABEL}
+    volumes:
+      # Volumes to backup
+      - mysql:/backup/mysql:ro                     
+      - config:/backup/config:ro                   
+      # Local backup location - use a separate secure transfer process to move backups to another host
+      - ${BACKUP_LOCAL_PATH}:/archive                     
+      # Time synch with host to ensure accurate CRON scheduling
+      - /etc/localtime:/etc/localtime:ro               
+      - /etc/timezone:/etc/timezone:ro                 
+      # Allows backup container to control other containers
+      - /var/run/docker.sock:/var/run/docker.sock:ro   
+
+    labels:
+      # WUD - What's up docker labels (https://getwud.github.io/wud/#/) -------------
+      # Support leading 'V'
+      - 'wud.tag.include=^v\d+\.\d+\.\d+$$'
+      - 'wud.link.template=https://github.com/offen/docker-volume-backup/releases' 
 
 volumes:
-  mysql:
   config:
+  mysql:
 
