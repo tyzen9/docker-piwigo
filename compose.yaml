@@ -90,8 +90,8 @@ services:
     container_name: ${BACKUP_LABEL}-backup
     restart: unless-stopped
     depends_on:
+      - piwigo
       - mysql
-      - config
     environment:
       - TZ=${TZ_ID:-America/New_York}
       - BACKUP_CRON_EXPRESSION=${BACKUP_CRON_EXPRESSION:-0 2 * * *}
