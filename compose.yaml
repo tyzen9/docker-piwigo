@@ -55,6 +55,8 @@ services:
     restart: always
     volumes:
       - mysql:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro               
+      - /etc/timezone:/etc/timezone:ro     
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rpassword}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-piwigo}
@@ -93,7 +95,6 @@ services:
       - piwigo
       - mysql
     environment:
-      - TZ=${TZ_ID:-America/New_York}
       - BACKUP_CRON_EXPRESSION=${BACKUP_CRON_EXPRESSION:-0 2 * * *}
       - BACKUP_RETENTION_DAYS=${BACKUP_RETENTION_DAYS:-14}
       - BACKUP_FILENAME=${BACKUP_LABEL}-%Y-%m-%dT%H-%M-%S.tar.gz
